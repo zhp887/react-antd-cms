@@ -1,10 +1,14 @@
 ## React项目安装
 1、安装命令：
+  ```
   cnpm install create-react-app -g
+  ```
 2、创建React项目：
   create-react-app 项目名
+
 3、执行命令：
   npm start 验证React项目是否安装成功
+
 4、执行命令：
   npm run eject 把脚手架原本隐藏封装的脚本，还原回来
   注意：在执行eject时，会报错。
@@ -16,15 +20,22 @@
   npm run eject
   ```
 5、安装sass
+  ```
   cnpm install node-sass -D
   cnpm install sass-loader -D
+  ```
 6、安装axios
+  ```
   cnpm install axios -S
+  ```
 7、安装react-router-dom
+  ```
   cnpm install react-router-dom -S
+  ```
 8、安装antd
+  ```
   cnpm install antd -S
-
+  ```
 
 
 这个项目是 [Create React App](https://github.com/facebook/create-react-app).
