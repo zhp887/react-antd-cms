@@ -37,7 +37,70 @@
   cnpm install antd -S
   ```
 
+## 环境
+1、自定义端口号
+  /scripts/start.js 搜索PORT
 
+2、配置@别名
+  /config/webpack.config.js里找到resolve.alias
+
+3、favicon制作
+  找免费在线制作网站，下载32*32的尺寸。
+
+4、sass安装
+  只用安装node-sass这个包即可。
+
+5、本地环境怎么配置代码
+  安装 cnpm install http-proxy-middleware -D
+  新建代理文件 src/setupProxy.js
+  ```
+  const { createProxyMiddleware } = require('http-proxy-middleware');
+  module.exports = function(app) {
+    app.use(
+      '/api',
+      createProxyMiddleware({
+        target: 'http://xxx.com',   // 目标服务器
+        changeOrigin: true
+      })
+    );
+  };
+  ```
+  重启服务
+
+## redux
+  action 触发行为，主要的作用是用来触发数据改变的行为
+  reducer  它的作用就是用来改变store中的数据
+  store 这是共享数据的存储中心
+1、安装
+  ```
+  cnpm install redux -S   // 创建store
+  ```
+2、在src/store/index.js创建store并抛出
+  ```
+  import { createStore } from 'redux'
+  // 创建store，必须要传第一个参数是reducer，它是一个纯函数，其作用是用来改变store的
+  const store = createStore(reducer)
+  export default store
+  ```
+3、定义reducer
+  ```
+  // 定义reducer需要两个参数，分别是当前需要被共享的state、用于改变state的action信号
+  // action={type, payload}，type用于指明你想做什么，payload指明你想得到的结果。
+  function reducer(state={}, action) {
+    switch(action.type) {
+      case '1':
+        return state
+      case '2':
+        return state
+      default:
+        return state
+    }
+  }
+  ```
+4、 在App.js中进行上下文关联
+  ```
+  cnpm install react-redux -S   // 把store与react组件关联起来
+  ```    
 这个项目是 [Create React App](https://github.com/facebook/create-react-app).
 
 ## 可用脚本
