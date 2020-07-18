@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 import React from 'react';
 import '@/assets/style/common.scss'
-import { getCnodeList } from '@/utils/api'
+// import { getCnodeList } from '@/utils/api'
 import 'moment/locale/zh-cn';
 import 'antd/dist/antd.css';
 
@@ -17,16 +17,16 @@ export default class App extends React.Component {
       list:[]
     }
   }
-  componentDidMount(){
-    let params = {
-      tab:'',
-      page:1,
-      limit:5
-    }
-    getCnodeList(params).then(res=>{
-      console.log('res',res)
-    })
-  }
+  // componentDidMount(){
+  //   let params = {
+  //     tab:'',
+  //     page:1,
+  //     limit:5
+  //   }
+  //   getCnodeList(params).then(res=>{
+  //     console.log('res',res)
+  //   })
+  // }
 
   render(){
     return (

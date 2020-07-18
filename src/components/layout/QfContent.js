@@ -10,52 +10,51 @@ import routes from '@/views'
 // 状态管理
 import { Provider } from 'react-redux'
 import store from '@/store'
-export default class QfContent extends React.Component{
-    constructor(porps){
+export default class QfContent extends React.Component {
+    constructor(porps) {
         super(porps)
-        this.state={
+        this.state = {
 
         }
     }
-    //生成视图容器
-    //exact完全匹配
-    //Route和Switch是直接父子关系，中间不能其它的元素包裹
-    createRoute() {
-        var res = []
-        routes.map(ele=> {
-            res.push(
-                <Route
-                    key={ele.id}
-                    exact
-                    path={ele.path}
-                    component={ele.component}>
-                </Route>
-            )
-            if (ele.children) {
-                ele.children.map(ele => {
-                    res.push(
-                        <Route
-                            key={ele.id}
-                            exact
-                            path={ele.path}
-                            component={ele.component}>
-                        </Route>
-                    )
-                })
-            }
+    // 生成视图容器
+    createRoutes() {
+        let res = []
+        // 递归函数
+        function create(arr) {
+            arr.map(ele => {
+                res.push(
+                    <Route
+                        exact
+                        path={ele.path}
+                        component={ele.component}
+                        key={ele.id}>
+                    </Route>
+                )
+                // 递归一定要有结束条件
+                if (ele.children) {
+                    create(ele.children)
+                }
+                return false
+            })
+        }
+        // 调用递归
+        routes.map(ele => {
+            create(ele.children)
+            return false
         })
         return res
     }
-    render(){
-        return(
+    render() {
+        return (
             <div className='qfContent'>
                 <Provider store={store}>
                     <Switch>
                         {/* 一组匹配规则，从上到下进行匹配 */}
-                        {this.createRoute()}
-                        <Redirect from='/*' to='/home'></Redirect>
+                        {this.createRoutes()}
+                        <Redirect from='/*' to='/'></Redirect>
                     </Switch>
-                </Provider>          
+                </Provider>
             </div>
         )
     }

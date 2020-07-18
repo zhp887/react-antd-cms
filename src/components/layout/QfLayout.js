@@ -1,6 +1,7 @@
 import React from 'react'
 import { Layout } from 'antd';
 import './css/qfLayout.scss'
+
 import { QfSider, QfHeader, QfContent } from '..';
 const { Header, Sider, Content } = Layout;
 
@@ -14,15 +15,15 @@ export default class QfLayout extends React.Component{
     render(){
         return(
             <Layout className='qfLayout'>
-                <Sider>
-                    <QfSider></QfSider>
+                <Sider width={170}>
+                    <QfSider />
                 </Sider>
                 <Layout>
                     <Header>
-                        <QfHeader></QfHeader>
+                        <QfHeader />
                     </Header>
                     <Content>
-                        <QfContent></QfContent>
+                        <QfContent />
                     </Content>
                 </Layout>
             </Layout>

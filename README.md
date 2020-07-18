@@ -101,6 +101,47 @@
   ```
   cnpm install react-redux -S   // 把store与react组件关联起来
   ```    
+在App.js中引入store，并使用上下文进行关联
+  ```
+  import { Provider } from 'react-redux'
+  import store from '@/store'
+
+  return(
+    <Provider store={store}></Provider>
+  )
+  ```
+5、在页面组件中使用store
+  ```
+  import { connect } from 'react-redux'
+
+  // 把state中的数据，变成当成组件的props
+  function mapStateToProps(state){
+    return {
+      msg: state.msg
+    }
+  }
+  // 把actions中方法，放在当前组件的props
+  function mapActionToProps(dispatch) {
+    return {
+      changeMsg: ()=>{
+        // 派发一个action到reducer去
+        console.log('changeMsg')
+      }
+    }
+  }
+  export default connect(mapStateToProps,mapActionToProps)(Home)
+  ```
+6、redux异步action
+  redux默认只支持同步的action。那么异步的action行为(比如调接口)该怎么办呢？
+  需要使用第三方中间件(redux-thunk)，把一步异步的action转化成三个同步的action，以此来解决“redux只支持同步action”特点。
+  这三个同步的action，分别是：第一个action的作用告诉reducer有一个异步行为触发;第二个action告诉reducer异步行为执行成功了，可以更新state了;第三个action是告诉reducer这个异步行为失败了。
+
+7、面试相关
+  你如何理解redux？ flux、 地位、三个概念，单向数据流。
+  store特点：单一数据源、只读、使用纯函数reducer进行修改。
+  react-redux：Provider connect(mapStateToProps,mapActionToProps)
+  redux中间件：redux-thunk
+  dispatch()发送一个action到reducer
 这个项目是 [Create React App](https://github.com/facebook/create-react-app).
 
 ## 可用脚本

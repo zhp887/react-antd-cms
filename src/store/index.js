@@ -1,4 +1,6 @@
-import { createStore,combineReducers } from 'redux'
+import { createStore, combineReducers ,applyMiddleware } from 'redux'
+// 用于把异步行为(比如调接口)的action转化成三个同步的action
+import thunk from 'redux-thunk' 
 // 分模块后的子reducer
 import testReducer from './reducers/test'
 import todoReducer from './reducers/todo'
@@ -9,6 +11,6 @@ const reducer = combineReducers({
     todo:todoReducer
 })
 // 创建一个store，第一个参数是必填，它是reducer
-const store = createStore(reducer)
+const store = createStore(reducer, applyMiddleware(thunk))
 
 export default store

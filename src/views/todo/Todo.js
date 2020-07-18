@@ -1,36 +1,28 @@
-import React from 'react'
+﻿import React from 'react'
 import './Todo.scss'
 import { connect } from 'react-redux'
 import { 
     addTodo,
-    addTodo1,
-    addTodo2,
-    modify1Todo,
-    modify2Todo,
-    delTodo1,
-    delTodo2,
+    myTodo,
+    delTodo,
+    updateTodo,
     editTodo,
-    clearTodo 
+    addTodo1,
 } from '@/store/actions/todo'
 
 function mapStateToProps(state){
     return{
-        todolist1:state.todo.list1,
-        todolist2:state.todo.list2
-
+        todolist:state.todo.list
     }
 }
 function mapActionToProps(dispatch){
     return {
-        addTodo:(payload)=>dispatch(addTodo(payload)),
+        addTodo:(data)=>dispatch(addTodo(data)),
+        myTodo: (params)=>dispatch(myTodo(params)), //发第一个action
+        delTodo:(params)=>dispatch(delTodo(params)),
+        updateTodo:(params)=>dispatch(updateTodo(params)),
+        editTodo:(data)=>dispatch(editTodo(data)),
         addTodo1:(payload)=>dispatch(addTodo1(payload)),
-        addTodo2:(payload)=>dispatch(addTodo2(payload)),
-        modify1Todo:(payload)=>dispatch(modify1Todo(payload)),
-        modify2Todo:(payload)=>dispatch(modify2Todo(payload)),
-        delTodo1:(payload)=>dispatch(delTodo1(payload)),
-        delTodo2:(payload)=>dispatch(delTodo2(payload)),
-        editTodo:(payload)=>dispatch(editTodo(payload)),
-        clearTodo:(payload)=>dispatch(clearTodo(payload))
     }
 }
 class Todo extends React.Component{
@@ -39,17 +31,22 @@ class Todo extends React.Component{
         this.state={
             task:'',
             task1:'',
-            task2:''
         }
     }
     componentDidMount(){
-        console.log('props',this.props)
+      this.initList()
     }
     // 添加文本
     inputChange(e){
         this.setState({
             task:e.target.value
         })
+    }
+    initList(){
+        let params = {
+            userId:'BJ200113003'
+        }
+        this.props.myTodo(params)
     }
     inputEnter(e){
         let { task } = this.state
@@ -59,104 +56,103 @@ class Todo extends React.Component{
                 return
             }else{
                   // 添加一条todo
-                this.props.addTodo({id:Date.now(),task})
+                  let data = {
+                    userId:'BJ200113003',
+                    task
+                  }
+                this.props.addTodo(data)
                 this.setState({task:''})
+                this.initList()
             }
         }
     }
-    // 编辑文本未完成
-    changeHandle1(e){
-        this.setState({
-            task1:e.target.value
-        })
+     // 删除文本
+     deleteTodo(id){
+        let params = {
+            userId:'BJ200113003',
+            id
+        }
+        this.props.delTodo(params)
+        this.initList()
     }
-    keyUpHandle1(id,e){
+     //修改任务状态
+     todoHandle(ele,status){
+         let params = {
+            userId:'BJ200113003',
+            id:ele._id,
+            status,
+         }
+         this.props.updateTodo(params)
+         this.initList()
+    }
+    // 修改任务名称
+    changeHandle(e){
+        if (e.target.value) {
+            this.setState({
+                task1:e.target.value
+            })  
+        }
+    }
+    KeyUpHandle(ele,e){
         let { task1 } = this.state
         if (e.keyCode === 13) {
-            if (task1 === '') {
+            if (ele.task === '' && task1 === '') {
                 alert('请输入内容')
                 return
             }else{
-                  // 添加一条todo
-                this.props.modify1Todo({id,task:task1})
+                let data = {
+                    userId:'BJ200113003',
+                    id:ele._id,
+                    task:task1
+                }
+                console.log(data)
+                this.props.editTodo(data)
             }
         }
     }
-     // 编辑文本已经完成
-    changeHandle2(e){
-        this.setState({
-            task1:e.target.value
-        })
-    }
-    keyUpHandle2(id,e){
-        let { task2 } = this.state
-        if (e.keyCode === 13) {
-            if (task2 === '') {
-                alert('请输入内容')
-                return
-            }else{
-                  // 添加一条todo
-                this.props.modify2Todo({id,task:task2})
-            }
-        }
-    }
-    // 改状态
-    todo1Handle(jian){
-        this.props.addTodo2(jian)
-        this.props.delTodo1(jian.id)
-    }
-    todo2Handle(jian){
-        this.props.addTodo1(jian)
-        this.props.delTodo2(jian.id)
-    }
-    // 删除文本
-    deleteTodo1(id){
-        this.props.delTodo1(id)
-    }
-    deleteTodo2(id){
-        this.props.delTodo2(id)
-    }
-    // 清除todo
-    clearTodo(){
-        this.props.clearTodo()
-    }
-    // 渲染todolist
     //正在进行
     createTodoList1(){
-        let { todolist1 } = this.props
-        return todolist1.map(ele=>(
-            <li key={ele.id}>
-                <input type='checkbox' onClick={this.todo1Handle.bind(this,ele)} />
-                <p>
-                    <input 
-                      type='text' 
-                      defaultValue={ele.task} 
-                      onChange={this.changeHandle1.bind(this)}
-                      onKeyUp={this.keyUpHandle1.bind(this,ele.id)}/>
-                </p>
-                <span onClick={this.deleteTodo1.bind(this,ele.id)}>-</span>
-            </li>
-        ))
+        // console.log(this.props.todolist.undone)
+        let { todolist } = this.props
+        if (todolist.undone) {
+            return todolist.undone.map(ele=>(
+                <li key={ele._id}>
+                    <input type='checkbox' onClick={this.todoHandle.bind(this,ele,1)} />
+                    <p>
+                        <input 
+                        type='text' 
+                        defaultValue={ele.task} 
+                        onChange={this.changeHandle.bind(this)}
+                        onKeyUp={this.KeyUpHandle.bind(this,ele)}/>
+                    </p>
+                    <span onClick={this.deleteTodo.bind(this,ele._id)}>-</span>
+                </li>
+            ))
+        }
+        
     }
     // 已经完成
     createTodoList2(){
-        let { todolist2 } = this.props
-        return todolist2.map(ele=>(
-            <li key={ele.id}>
-                <input type='checkbox' defaultChecked onClick={this.todo2Handle.bind(this,ele)} />
-                <p>
-                    <input 
-                      type='text' 
-                      defaultValue={ele.task} 
-                      onChange={this.changeHandle2.bind(this)}
-                      onKeyUp={this.keyUpHandle2.bind(this)}/>
-                </p>
-                <span onClick={this.deleteTodo2.bind(this,ele.id)}>-</span>
-            </li>
-        ))
+        let { todolist } = this.props
+        if (todolist.done) {
+            return todolist.done.map(ele=>(
+                <li key={ele._id}>
+                    <input type='checkbox' defaultChecked onClick={this.todoHandle.bind(this,ele,0)} />
+                    <p>
+                        <input 
+                          type='text' 
+                          defaultValue={ele.task} 
+                          onChange={this.changeHandle.bind(this)}
+                          onKeyUp={this.KeyUpHandle.bind(this,ele)}/>
+                    </p>
+                    <span onClick={this.deleteTodo.bind(this,ele._id)}>-</span>
+                </li>
+            ))
+        }
     }
     render(){
         let { task } = this.state
+        let { undone,done } = this.props.todolist
         return(
             <div className='todo'>
                 <div className='header'>
@@ -174,18 +170,18 @@ class Todo extends React.Component{
                     </div>
                 </div>
                 <div className='section'>
-                    <h2>正在进行<span>{this.props.todolist1.length}</span></h2>
+                    <h2>正在进行<span>{undone ? undone.length : 0}</span></h2>
                     <ol id="todolist" className="demo-box">
                        {this.createTodoList1()}
                     </ol>
-                    <h2>已经完成<span>{this.props.todolist2.length}</span></h2>
+                    <h2>已经完成<span>{done ? done.length : 0}</span></h2>
                     <ul id="donelist" >
                         {this.createTodoList2()}
                     </ul>
                 </div>
                 <div className='footer'>
                     Copyright © 2014 todolist.cn  
-                    <span onClick={this.clearTodo.bind(this)}>clear</span>
+                    <span>clear</span>
                 </div>
             </div>
         )

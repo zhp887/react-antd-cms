@@ -1,9 +1,10 @@
 /* eslint-disable default-case */
 /* eslint-disable no-unused-vars */
-import { CHANGE_MSG } from '../actionTypes'
+import { CHANGE_MSG, CNODE_LIST } from '../actionTypes'
 let initState = {
     msg:'hello redux',
-    list:[]
+    list:[],
+    cnodelist:[]
 }
 
 // action的作用，给reducer一个改变数据的信号
@@ -18,14 +19,8 @@ export default function reducer(state=initState,action){
             newSatate.msg = action.payload
             //改变msg
             return newSatate
-        case 2:
-            //增加一条todo
-            // state.list.push(action.payload)
-            return state
-        case 3:
-            //删除一条todo
-            state.list.splice(action.payload,1)
-            return state
+        case CNODE_LIST:
+            return {...state,...{cnodelist:action.payload}}
         default:
             return state
     }
